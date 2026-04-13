@@ -3,70 +3,157 @@ const mysql = require("mysql2");
 const bodyParser = require("body-parser");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-// Middleware
+// middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// MySQL connection
+// database connection
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "AVNS_-",
-  database: "simpledb",
-  port: 3306,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  password: "",
+  database: "crud_db",
+  port: 3306
 });
 
 db.connect(err => {
   if (err) {
-    console.log("DB connection failed:", err);
+    console.log("Database connection failed");
   } else {
-    console.log("Connected to MySQL!");
+    console.log("Connected to MySQL");
   }
 });
 
-// Home page (form + data)
+
+// READ (Display students)
 app.get("/", (req, res) => {
-  db.query("SELECT * FROM messages", (err, results) => {
-    if (err) return res.send("Database error");
+
+  db.query("SELECT * FROM students", (err, results) => {
 
     let html = `
-      <h1>Simple Node.js + MySQL Website</h1>
+    <h1>Student CRUD System</h1>
 
-      <form method="POST" action="/add">
-        <input type="text" name="message" placeholder="Enter message" required />
-        <button type="submit">Save</button>
-      </form>
+    <h2>Add Student</h2>
 
-      <h2>Messages:</h2>
-      <ul>
+    <form method="POST" action="/add">
+      Name: <input name="stud_name" required><br>
+      Address: <input name="stud_address" required><br>
+      Age: <input name="age" required><br>
+      <button>Add Student</button>
+    </form>
+
+    <h2>Student List</h2>
+
+    <table border="1">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Age</th>
+      <th>Actions</th>
+    </tr>
     `;
 
-    results.forEach(row => {
-      html += `<li>${row.message}</li>`;
+    results.forEach(student => {
+
+      html += `
+      <tr>
+        <td>${student.stud_id}</td>
+        <td>${student.stud_name}</td>
+        <td>${student.stud_address}</td>
+        <td>${student.age}</td>
+
+        <td>
+          <a href="/edit/${student.stud_id}">Edit</a>
+          <a href="/delete/${student.stud_id}">Delete</a>
+        </td>
+      </tr>
+      `;
     });
 
-    html += `</ul>`;
+    html += "</table>";
 
     res.send(html);
+
   });
+
 });
 
-// Add message
+
+// CREATE
 app.post("/add", (req, res) => {
-  const message = req.body.message;
 
-  db.query("INSERT INTO messages (message) VALUES (?)", [message], (err) => {
-    if (err) return res.send("Insert error");
+  const { stud_name, stud_address, age } = req.body;
 
-    res.redirect("/");
-  });
+  db.query(
+    "INSERT INTO students (stud_name, stud_address, age) VALUES (?, ?, ?)",
+    [stud_name, stud_address, age],
+    () => res.redirect("/")
+  );
+
 });
 
-// Start server
+
+// EDIT PAGE
+app.get("/edit/:id", (req, res) => {
+
+  const id = req.params.id;
+
+  db.query(
+    "SELECT * FROM students WHERE stud_id = ?",
+    [id],
+    (err, results) => {
+
+      const student = results[0];
+
+      res.send(`
+        <h2>Edit Student</h2>
+
+        <form method="POST" action="/update/${id}">
+          Name: <input name="stud_name" value="${student.stud_name}"><br>
+          Address: <input name="stud_address" value="${student.stud_address}"><br>
+          Age: <input name="age" value="${student.age}"><br>
+          <button>Update</button>
+        </form>
+      `);
+
+    }
+  );
+
+});
+
+
+// UPDATE
+app.post("/update/:id", (req, res) => {
+
+  const id = req.params.id;
+  const { stud_name, stud_address, age } = req.body;
+
+  db.query(
+    "UPDATE students SET stud_name=?, stud_address=?, age=? WHERE stud_id=?",
+    [stud_name, stud_address, age, id],
+    () => res.redirect("/")
+  );
+
+});
+
+
+// DELETE
+app.get("/delete/:id", (req, res) => {
+
+  const id = req.params.id;
+
+  db.query(
+    "DELETE FROM students WHERE stud_id=?",
+    [id],
+    () => res.redirect("/")
+  );
+
+});
+
+
+// START SERVER
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  console.log("Server running on port 3000");
 });
