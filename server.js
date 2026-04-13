@@ -14,6 +14,7 @@ const db = mysql.createConnection({
   user: "jerome",
   password: "AVNS_-YAxsM4LYuR2M5SLjeq", // your MySQL password
   database: "simpledb"
+  
 });
 
 db.connect(err => {
