@@ -10,11 +10,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // database connection
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
+  host: "mysql-37610bae-jeromequijano17-df99.l.aivencloud.com",
+  user: "jerome",
+  password: "AVNS_-YAxsM4LYuR2M5SLjeq",
   database: "crud_db",
-  port: 3306
+  port: 23687
 });
 
 db.connect(err => {
