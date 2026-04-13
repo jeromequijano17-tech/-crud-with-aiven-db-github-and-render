@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 3000;
 
 // Home page
 app.get("/", (req, res) => {
-  res.send("Hello! Your Node.js app is running on Render 🚀");
+  res.send(" 🚀");
 });
 
 // Start server
