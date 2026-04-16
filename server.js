@@ -124,7 +124,7 @@ button:hover {
 <body>
 
 <div class="header">
-Student CRUD Dashboard123
+Student CRUD Dashboard
 </div>
 
 <div class="container">
