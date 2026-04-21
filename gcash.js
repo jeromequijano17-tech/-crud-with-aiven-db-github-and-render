@@ -12,7 +12,7 @@ const db = mysql.createConnection({
     host: "mysql-37610bae-jeromequijano17-df99.l.aivencloud.com",
   user: "jerome",
   password: "AVNS_-YAxsM4LYuR2M5SLjeq",
-  database: "gcash_db",
+  database: "gcash",
   port: 23687
 });
 
