@@ -138,7 +138,7 @@ ${style}
 <div class="container">
 
 <div class="title">
-⚔️ GCash Transaction Log ⚔️
+⚔️ GCash Transaction Logs ⚔️
 </div>
 
 <form action="/save" method="POST">
