@@ -133,7 +133,7 @@ Student CRUD Dashboard
 
 <div class="card">
 
-<h2>Add Student</h2>
+<h2>Save New Student</h2>
 
 <form method="POST" action="/add">
 
